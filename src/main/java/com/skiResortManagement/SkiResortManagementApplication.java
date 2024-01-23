@@ -15,8 +15,7 @@ public class SkiResortManagementApplication {
 
         SpringApplication.run(SkiResortManagementApplication.class, args);
 
-        SkiManagerClient skiManagerClient = new SkiManagerClient();
-        skiManagerClient.rideEventRequest();
+
     }
 
     @Autowired

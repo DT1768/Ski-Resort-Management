@@ -21,9 +21,10 @@ public class SkiManagerClient {
     public void rideEventRequest() {
         String rideEvent = gson.toJson(generateRideEvent());
         double initTime = System.nanoTime();
-        postRequest(rideEvent);
+        String res = postRequest(rideEvent).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
+        logger.info(String.valueOf(res));
         logger.info("Single Request Completed in " + time/1000000 + "ms");
     }
 
@@ -33,11 +34,13 @@ public class SkiManagerClient {
         return new SkiManager(random.nextInt(100000)+1,random.nextInt(10)+1,random.nextInt(40)+1,2022,1,random.nextInt(360)+1);
     }
 
-    public void postRequest(String e){
+    public ResponseEntity<String> postRequest(String e){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(e, headers);
 
         ResponseEntity<String> res = restTemplate.exchange(URL, HttpMethod.POST, entity, String.class);
+
+        return res;
     }
 }
