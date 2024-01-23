@@ -1,5 +1,6 @@
 package com.skiResortManagement;
 
+import com.skiResortManagement.client.SkiManagerClient;
 import com.skiResortManagement.model.SkiManager;
 import com.skiResortManagement.service.SkiManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class SkiResortManagementApplication {
     public static void main(String[] args) {
+
         SpringApplication.run(SkiResortManagementApplication.class, args);
+
+        SkiManagerClient skiManagerClient = new SkiManagerClient();
+        skiManagerClient.rideEventRequest();
     }
 
     @Autowired
