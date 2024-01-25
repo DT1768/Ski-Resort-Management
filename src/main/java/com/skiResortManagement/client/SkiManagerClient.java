@@ -15,17 +15,30 @@ public class SkiManagerClient {
     private RestTemplate restTemplate = new RestTemplate();
     Random random = new Random();
 
-    private static final String URL = "http://localhost:8080/rideEvent";
+    private static final String URL = "http://localhost:8080";
+    private static final String postURL = "http://localhost:8080/rideEvent";
+    private static final String getResortsURL = "http://localhost:8080/resorts";
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void rideEventRequest() {
         String rideEvent = gson.toJson(generateRideEvent());
+        String path = "/rideEvent";
         double initTime = System.nanoTime();
-        String res = postRequest(rideEvent).getBody();
+        String res = postRequest(rideEvent, path).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
         logger.info(String.valueOf(res));
-        logger.info("Single Request Completed in " + time/1000000 + "ms");
+        logger.info("POST /rideEvent Request Completed in " + time/1000000 + "ms");
+    }
+
+    public void getResortsRequest() {
+        String path = "/resorts";
+        double initTime = System.nanoTime();
+        String res = getRequest(path).getBody();
+        double finalTime = System.nanoTime();
+        double time = finalTime - initTime;
+        logger.info(String.valueOf(res));
+        logger.info("GET /resorts Request Completed in " + time/1000000 + "ms");
     }
 
 
@@ -34,12 +47,22 @@ public class SkiManagerClient {
         return new SkiManager(random.nextInt(100000)+1,random.nextInt(10)+1,random.nextInt(40)+1,2022,1,random.nextInt(360)+1);
     }
 
-    public ResponseEntity<String> postRequest(String e){
+    public ResponseEntity<String> postRequest(String e, String path){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(e, headers);
 
-        ResponseEntity<String> res = restTemplate.exchange(URL, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> res = restTemplate.exchange(URL + path, HttpMethod.POST, entity, String.class);
+
+        return res;
+    }
+
+    public ResponseEntity<String> getRequest(String path){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> res = restTemplate.exchange(URL + path, HttpMethod.GET, entity, String.class);
 
         return res;
     }

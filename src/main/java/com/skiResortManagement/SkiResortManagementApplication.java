@@ -15,7 +15,6 @@ public class SkiResortManagementApplication {
 
         SpringApplication.run(SkiResortManagementApplication.class, args);
 
-
     }
 
     @Autowired
@@ -29,6 +28,13 @@ public class SkiResortManagementApplication {
     @PostMapping("/rideEvent")
     public String newSkimanager(@RequestBody SkiManager newSkimanager){
         String response = skimanagerservice.createRideEvent(newSkimanager);
+
+        return response;
+    }
+
+    @GetMapping("/resorts")
+    public String newSkimanager(){
+        String response = skimanagerservice.getResorts();
 
         return response;
     }

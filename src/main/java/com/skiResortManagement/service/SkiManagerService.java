@@ -21,7 +21,15 @@ public class SkiManagerService {
         }
         else{
             response = "Request Posted Successfully. Details: SKierId:" + newSkiManager.getSkierId() + " LiftId:"+ newSkiManager.getLiftId() + " ResortId:" + newSkiManager.getResortId();
+
         }
+        return response;
+    }
+
+    @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
+    public String getResorts(){
+        String response = "List of Resorts: 1) Sky View Resort 2) Night Vision Resort";
+
         return response;
     }
 
