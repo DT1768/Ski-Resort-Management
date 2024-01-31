@@ -35,7 +35,6 @@ public class ResortManagerService {
         String response = "";
         ArrayList<Integer> out = new ArrayList<Integer>();
         for (ResortManager resortManager: listOfResorts){
-            System.out.println(resortManager.getResortId());
             if(resortManager.getResortId() == id){
                 out = resortManager.getSeasons();
             }
@@ -44,7 +43,7 @@ public class ResortManagerService {
         if (out.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't Find Resort.");
         } else {
-            response = "Request Posted Successfully." + "\n" + "Seasons: " + out  ;
+            response = "Request Posted Successfully." + "\n"  + "Seasons: " + out  ;
         }
 
         return response;
