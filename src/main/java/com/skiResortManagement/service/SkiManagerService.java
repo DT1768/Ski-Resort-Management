@@ -1,11 +1,13 @@
 package com.skiResortManagement.service;
 
+
 import com.skiResortManagement.model.SkiManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 
 
 @Service
@@ -20,18 +22,13 @@ public class SkiManagerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Data");
         }
         else{
-            response = "Request Posted Successfully. Details: SKierId:" + newSkiManager.getSkierId() + " LiftId:"+ newSkiManager.getLiftId() + " ResortId:" + newSkiManager.getResortId();
+            response = "Request Posted Successfully."+ "\n" +"Details: SKierId : " + newSkiManager.getSkierId() + " LiftId : "+ newSkiManager.getLiftId() + " ResortId : " + newSkiManager.getResortId();
 
         }
         return response;
     }
 
-    @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
-    public String getResorts(){
-        String response = "List of Resorts: 1) Sky View Resort 2) Night Vision Resort";
 
-        return response;
-    }
 
     private boolean requestValidator(SkiManager newSkimanager){
         boolean validSkier = newSkimanager.getSkierId() >= 1 && newSkimanager.getSkierId() <= 100000;

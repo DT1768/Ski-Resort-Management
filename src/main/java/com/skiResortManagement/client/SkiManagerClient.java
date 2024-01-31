@@ -16,19 +16,16 @@ public class SkiManagerClient {
     Random random = new Random();
 
     private static final String URL = "http://localhost:8080";
-    private static final String postURL = "http://localhost:8080/rideEvent";
-    private static final String getResortsURL = "http://localhost:8080/resorts";
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void rideEventRequest() {
-        String rideEvent = gson.toJson(generateRideEvent());
-        String path = "/rideEvent";
+        String path = "/resorts/"+ (random.nextInt(10)+1) + "/seasons/" + 2022 + "/days/" + 1 + "/skiers/" + (random.nextInt(100000)+1);
         double initTime = System.nanoTime();
-        String res = postRequest(rideEvent, path).getBody();
+        String res = postRequest(path).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
         logger.info(String.valueOf(res));
-        logger.info("POST /rideEvent Request Completed in " + time/1000000 + "ms");
+        logger.info("POST " + path + "Request Completed in " + time/1000000 + "ms");
     }
 
     public void getResortsRequest() {
@@ -38,19 +35,23 @@ public class SkiManagerClient {
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
         logger.info(String.valueOf(res));
-        logger.info("GET /resorts Request Completed in " + time/1000000 + "ms");
+        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
     }
 
-
-
-    public SkiManager generateRideEvent(){
-        return new SkiManager(random.nextInt(100000)+1,random.nextInt(10)+1,random.nextInt(40)+1,2022,1,random.nextInt(360)+1);
+    public void getSeasonsRequest(){
+        String path = "/resorts/" + (random.nextInt(4)+1) + "/seasons";
+        double initTime = System.nanoTime();
+        String res = getRequest(path).getBody();
+        double finalTime = System.nanoTime();
+        double time = finalTime - initTime;
+        logger.info(String.valueOf(res));
+        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
     }
 
-    public ResponseEntity<String> postRequest(String e, String path){
+    public ResponseEntity<String> postRequest(String path){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(e, headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> res = restTemplate.exchange(URL + path, HttpMethod.POST, entity, String.class);
 

@@ -1,12 +1,7 @@
 package com.skiResortManagement.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-
-@Document(collection = "SkiManagerDTO")
 public class SkiManager {
-    @Id
+
     private int skierId;
     private int resortId;
     private int liftId;
