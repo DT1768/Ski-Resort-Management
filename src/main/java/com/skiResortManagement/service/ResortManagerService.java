@@ -68,10 +68,10 @@ public class ResortManagerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't Find Resort.");
         }
         else if(out.isEmpty()){
-
+            //TODO: Add validation to season if it already exists
         }
         else {
-            //TODO: Add validation to season if it already exists
+
             out.add(season);
             response = "Request Posted Successfully." + "\n"  + "Seasons: " + out  ;
         }

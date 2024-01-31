@@ -9,11 +9,18 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 
 
 @Service
 public class SkiManagerService {
     private final int maxAttempt = 5;
+
+    ArrayList<SkiManager> rideList = new ArrayList<SkiManager>();
+
+    public SkiManagerService(){
+        rideList.add(new SkiManager(1,1,1,2022,1,1));
+    }
 
     Gson gson = new Gson();
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
@@ -31,10 +38,9 @@ public class SkiManagerService {
             data.put("seasonId", newSkiManager.getSeasonId());
             data.put("dayId",newSkiManager.getDayId());
             data.put("time",newSkiManager.getTime());
-
             String out = gson.toJson(data);
             response = "Request Fetched Successfully."+ "\n" +"Details:" + out;
-
+            rideList.add(newSkiManager);
         }
         return response;
     }

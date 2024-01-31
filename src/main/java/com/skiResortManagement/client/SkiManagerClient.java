@@ -4,8 +4,6 @@ package com.skiResortManagement.client;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,11 +28,12 @@ public class SkiManagerClient {
         data.put("liftId", liftId);
         String body = gson.toJson(data);
 
+
         double initTime = System.nanoTime();
         String res = requestsHTTP.postRequest(body,path).getBody();
         double finalTime = System.nanoTime();
         double time2 = finalTime - initTime;
-        logger.info(String.valueOf(res));
+        logger.info(res);
         logger.info("POST " + path + " Request Completed in " + time2/1000000 + "ms");
     }
 

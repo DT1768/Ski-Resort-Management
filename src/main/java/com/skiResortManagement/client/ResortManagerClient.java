@@ -22,7 +22,7 @@ public class ResortManagerClient {
         String res = requestsHTTP.getRequest(path).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
-        logger.info(String.valueOf(res));
+        logger.info(res);
         logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
     }
 
@@ -32,7 +32,7 @@ public class ResortManagerClient {
         String res = requestsHTTP.getRequest(path).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
-        logger.info(String.valueOf(res));
+        logger.info(res);
         logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
     }
 
@@ -48,7 +48,7 @@ public class ResortManagerClient {
         String res = requestsHTTP.postRequest(body,path).getBody();
         double finalTime = System.nanoTime();
         double time = finalTime - initTime;
-        logger.info(String.valueOf(res));
+        logger.info(res);
         logger.info("POST " + path + " Request Completed in " + time/1000000 + "ms");
     }
 

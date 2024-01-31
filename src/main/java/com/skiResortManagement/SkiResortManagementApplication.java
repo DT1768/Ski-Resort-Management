@@ -10,9 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+
 import java.util.Map;
-import java.util.Random;
 
 @SpringBootApplication
 @RestController
@@ -26,7 +25,7 @@ public class SkiResortManagementApplication {
     Gson gson = new Gson();
 
     @Autowired
-    private SkiManagerService skimanagerservice;
+    private SkiManagerService skimanagerservice = new SkiManagerService();
     private ResortManagerService resortManagerService = new ResortManagerService();
 
     @GetMapping("/hello")
@@ -42,11 +41,10 @@ public class SkiResortManagementApplication {
         int dayId = Integer.parseInt(pathVariables.get("dayId"));
         int skierId = Integer.parseInt(pathVariables.get("skierId"));
 
+        Map<String , Object> mapData = gson.fromJson(body, Map.class);
 
-        Map<String , Object> data = gson.fromJson(body, Map.class);
-
-        int liftId = ((Number) data.get("liftId")).intValue();
-        int time = ((Number) data.get("time")).intValue();
+        int liftId = ((Number) mapData.get("liftId")).intValue();
+        int time = ((Number) mapData.get("time")).intValue();
 
         SkiManager newSkimanager = new SkiManager(skierId, resortId, liftId, seasonId, dayId, time);
 
