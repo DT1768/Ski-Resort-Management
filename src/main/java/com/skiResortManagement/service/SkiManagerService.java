@@ -1,6 +1,7 @@
 package com.skiResortManagement.service;
 
 
+import com.google.gson.Gson;
 import com.skiResortManagement.model.SkiManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class SkiManagerService {
     private final int maxAttempt = 5;
 
+    Gson gson = new Gson();
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String createRideEvent(SkiManager newSkiManager){
         String response = "";
@@ -22,7 +24,16 @@ public class SkiManagerService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Data");
         }
         else{
-            response = "Request Posted Successfully."+ "\n" +"Details: SKierId : " + newSkiManager.getSkierId() + " LiftId : "+ newSkiManager.getLiftId() + " ResortId : " + newSkiManager.getResortId();
+            java.util.Map<String, Object> data = new java.util.HashMap<>();
+            data.put("SkierId",newSkiManager.getSkierId());
+            data.put("ResortId",newSkiManager.getResortId());
+            data.put("LiftId",newSkiManager.getLiftId());
+            data.put("seasonId", newSkiManager.getSeasonId());
+            data.put("dayId",newSkiManager.getDayId());
+            data.put("time",newSkiManager.getTime());
+
+            String out = gson.toJson(data);
+            response = "Request Fetched Successfully."+ "\n" +"Details:" + out;
 
         }
         return response;

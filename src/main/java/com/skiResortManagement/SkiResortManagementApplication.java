@@ -1,6 +1,7 @@
 package com.skiResortManagement;
 
-import com.skiResortManagement.client.SkiManagerClient;
+
+import com.google.gson.Gson;
 import com.skiResortManagement.model.SkiManager;
 import com.skiResortManagement.service.ResortManagerService;
 import com.skiResortManagement.service.SkiManagerService;
@@ -9,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,6 +23,8 @@ public class SkiResortManagementApplication {
 
     }
 
+    Gson gson = new Gson();
+
     @Autowired
     private SkiManagerService skimanagerservice;
     private ResortManagerService resortManagerService = new ResortManagerService();
@@ -31,15 +35,19 @@ public class SkiResortManagementApplication {
     }
 
     @PostMapping("/resorts/{resortId}/seasons/{seasonId}/days/{dayId}/skiers/{skierId}")
-    public String postRideEvent(@PathVariable Map<String, String> pathVariables){
+    public String postRideEvent(@PathVariable Map<String, String> pathVariables, @RequestBody String body){
 
-        Random random = new Random();
         int resortId = Integer.parseInt(pathVariables.get("resortId"));
         int seasonId = Integer.parseInt(pathVariables.get("seasonId"));
         int dayId = Integer.parseInt(pathVariables.get("dayId"));
         int skierId = Integer.parseInt(pathVariables.get("skierId"));
-        int liftId = random.nextInt(40)+1;
-        int time = random.nextInt(360)+1;
+
+
+        Map<String , Object> data = gson.fromJson(body, Map.class);
+
+        int liftId = ((Number) data.get("liftId")).intValue();
+        int time = ((Number) data.get("time")).intValue();
+
         SkiManager newSkimanager = new SkiManager(skierId, resortId, liftId, seasonId, dayId, time);
 
         String response = skimanagerservice.createRideEvent(newSkimanager);
@@ -59,6 +67,19 @@ public class SkiResortManagementApplication {
         int id = Integer.parseInt(resortId);
 
         String response = resortManagerService.getSeasons(id);
+
+        return response;
+    }
+
+    @PostMapping("/resorts/{resortId}/seasons")
+    public String addSeason(@PathVariable String resortId, @RequestBody String body){
+        int id = Integer.parseInt(resortId);
+
+        Map<String , Object> data = gson.fromJson(body, Map.class);
+
+        int season = ((Number) data.get("season")).intValue();
+
+        String response = resortManagerService.addSeason(id,season);
 
         return response;
     }

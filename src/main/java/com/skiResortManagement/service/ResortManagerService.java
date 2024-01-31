@@ -1,5 +1,6 @@
 package com.skiResortManagement.service;
 
+import com.google.gson.Gson;
 import com.skiResortManagement.model.ResortManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
@@ -9,13 +10,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ResortManagerService {
     private final int maxAttempt = 5;
 
     ArrayList<ResortManager> listOfResorts = new ArrayList<ResortManager>();
+    Gson gson = new Gson();
 
     public ResortManagerService() {
         listOfResorts.add(new ResortManager(1, "Sky view Resort", 2000, new ArrayList<Integer>(List.of(2022, 2023, 2024))));
@@ -26,12 +28,34 @@ public class ResortManagerService {
 
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String getResorts() {
-        String response = "List of Resorts:\n " + listOfResorts.stream().map(Object::toString).collect(Collectors.joining("\n"));
+        String out = gson.toJson(listOfResorts);
+        String response = "List of Resorts:\n " + out;
         return response;
     }
 
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String getSeasons(int id) {
+        String response = "";
+        String out = "";
+        ArrayList<Integer> seasons = new ArrayList<Integer>();
+        for (ResortManager resortManager: listOfResorts){
+            if(resortManager.getResortId() == id){
+                seasons = resortManager.getSeasons();
+                out = gson.toJson(seasons);
+            }
+        }
+
+        if (out.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't Find Resort.");
+        } else {
+            response = "Request Fetched Successfully." + "\n"  + "Seasons: " + out  ;
+        }
+
+        return response;
+    }
+
+    @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
+    public String addSeason(int id, int season) {
         String response = "";
         ArrayList<Integer> out = new ArrayList<Integer>();
         for (ResortManager resortManager: listOfResorts){
@@ -42,7 +66,13 @@ public class ResortManagerService {
 
         if (out.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't Find Resort.");
-        } else {
+        }
+        else if(out.isEmpty()){
+
+        }
+        else {
+            //TODO: Add validation to season if it already exists
+            out.add(season);
             response = "Request Posted Successfully." + "\n"  + "Seasons: " + out  ;
         }
 
