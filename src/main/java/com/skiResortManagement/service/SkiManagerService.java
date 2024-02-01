@@ -19,6 +19,7 @@ public class SkiManagerService {
     ArrayList<SkiManager> rideList = new ArrayList<SkiManager>();
 
     public SkiManagerService(){
+
         rideList.add(new SkiManager(1,1,1,2022,1,1));
     }
 
@@ -42,6 +43,13 @@ public class SkiManagerService {
             response = "Request Fetched Successfully."+ "\n" +"Details:" + out;
             rideList.add(newSkiManager);
         }
+        return response;
+    }
+
+    @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
+    public String getRideEvents(){
+        String out = gson.toJson(rideList);
+        String response = "List of Ski Rides:\n " + out;
         return response;
     }
 

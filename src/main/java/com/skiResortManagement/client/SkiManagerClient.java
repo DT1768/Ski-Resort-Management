@@ -37,6 +37,17 @@ public class SkiManagerClient {
         logger.info("POST " + path + " Request Completed in " + time2/1000000 + "ms");
     }
 
+    public void getRideEvents() {
+        String path = "/rideEvents";
+        double initTime = System.nanoTime();
+        String res = requestsHTTP.getRequest(path).getBody();
+        double finalTime = System.nanoTime();
+        double time = finalTime - initTime;
+        logger.info(res);
+        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
+    }
+
+
 
 
 

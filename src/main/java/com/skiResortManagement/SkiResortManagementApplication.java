@@ -53,6 +53,13 @@ public class SkiResortManagementApplication {
         return response;
     }
 
+    @GetMapping("/rideEvents")
+    public String getSkiRides(){
+        String response = skimanagerservice.getRideEvents();
+
+        return response;
+    }
+
     @GetMapping("/resorts")
     public String getResorts(){
         String response = resortManagerService.getResorts();

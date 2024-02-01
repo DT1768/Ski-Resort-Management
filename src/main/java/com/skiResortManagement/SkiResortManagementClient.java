@@ -19,5 +19,7 @@ public class SkiResortManagementClient {
         resortManagerClient.getResortsRequest();
         resortManagerClient.getSeasonsRequest();
         resortManagerClient.addSeasonRequest();
+
+        skiManagerClient.getRideEvents();
     }
 }
