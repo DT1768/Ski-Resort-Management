@@ -2,8 +2,10 @@ package com.skiResortManagement.client;
 
 
 import com.google.gson.Gson;
+import com.skiResortManagement.model.ServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,7 @@ public class SkiManagerClient {
     Gson gson = new Gson();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public void rideEventRequest() {
+    public ServerResponse rideEventRequest() {
         String path = "/resorts/"+ (random.nextInt(10)+1) + "/seasons/" + 2022 + "/days/" + 1 + "/skiers/" + (random.nextInt(100000)+1);
         int time = random.nextInt(360)+1;
         int liftId = random.nextInt(40)+1;
@@ -28,23 +30,27 @@ public class SkiManagerClient {
         data.put("liftId", liftId);
         String body = gson.toJson(data);
 
-
         double initTime = System.nanoTime();
-        String res = requestsHTTP.postRequest(body,path).getBody();
+        ResponseEntity<String> res = requestsHTTP.postRequest(body,path);
         double finalTime = System.nanoTime();
-        double time2 = finalTime - initTime;
-        logger.info(res);
-        logger.info("POST " + path + " Request Completed in " + time2/1000000 + "ms");
+        double latency = (finalTime - initTime)/1000000;
+
+        //logger.info(res.getBody());
+        //logger.info("POST " + path + " Request Completed in " + latency + "ms");
+
+        return new ServerResponse(initTime/1000000,finalTime/1000000,res.getStatusCode().toString(),res.getBody(),latency);
     }
 
-    public void getRideEvents() {
+    public ServerResponse getRideEvents() {
         String path = "/rideEvents";
         double initTime = System.nanoTime();
-        String res = requestsHTTP.getRequest(path).getBody();
+        ResponseEntity<String> res = requestsHTTP.getRequest(path);
         double finalTime = System.nanoTime();
-        double time = finalTime - initTime;
-        logger.info(res);
-        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
+        double latency = (finalTime - initTime)/1000000;
+
+        //logger.info("GET " + path + " Request Completed in " + latency + "ms");
+
+        return new ServerResponse(initTime/1000000,finalTime/1000000,res.getStatusCode().toString(),res.getBody(),latency);
     }
 
 

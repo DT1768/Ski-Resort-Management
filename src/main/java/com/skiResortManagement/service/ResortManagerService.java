@@ -29,7 +29,7 @@ public class ResortManagerService {
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String getResorts() {
         String out = gson.toJson(listOfResorts);
-        String response = "List of Resorts:\n " + out;
+        String response = "List of Resorts: " + out;
         return response;
     }
 
@@ -48,7 +48,7 @@ public class ResortManagerService {
         if (out.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't Find Resort.");
         } else {
-            response = "Request Fetched Successfully." + "\n"  + "Seasons: " + out  ;
+            response = "Request Fetched Successfully."  + "Seasons: " + out  ;
         }
 
         return response;
@@ -73,7 +73,7 @@ public class ResortManagerService {
         else {
 
             out.add(season);
-            response = "Request Posted Successfully." + "\n"  + "Seasons: " + out  ;
+            response = "Request Posted Successfully."  + "Seasons: " + out  ;
         }
 
         return response;

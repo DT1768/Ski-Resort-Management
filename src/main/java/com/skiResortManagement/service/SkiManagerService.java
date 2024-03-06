@@ -40,7 +40,7 @@ public class SkiManagerService {
             data.put("dayId",newSkiManager.getDayId());
             data.put("time",newSkiManager.getTime());
             String out = gson.toJson(data);
-            response = "Request Fetched Successfully."+ "\n" +"Details:" + out;
+            response = "Request Fetched Successfully." +"Details:" + out;
             rideList.add(newSkiManager);
         }
         return response;
@@ -49,7 +49,7 @@ public class SkiManagerService {
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String getRideEvents(){
         String out = gson.toJson(rideList);
-        String response = "List of Ski Rides:\n " + out;
+        String response = "List of Ski Rides: " + out;
         return response;
     }
 

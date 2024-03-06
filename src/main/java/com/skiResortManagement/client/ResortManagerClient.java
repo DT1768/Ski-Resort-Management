@@ -1,8 +1,10 @@
 package com.skiResortManagement.client;
 
 import com.google.gson.Gson;
+import com.skiResortManagement.model.ServerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,27 +18,31 @@ public class ResortManagerClient {
     Gson gson = new Gson();
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public void getResortsRequest() {
+    public ServerResponse getResortsRequest() {
         String path = "/resorts";
         double initTime = System.nanoTime();
-        String res = requestsHTTP.getRequest(path).getBody();
+        ResponseEntity<String> res = requestsHTTP.getRequest(path);
         double finalTime = System.nanoTime();
-        double time = finalTime - initTime;
-        logger.info(res);
-        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
+        double latency = (finalTime - initTime)/1000000;
+        //logger.info(res);
+        //logger.info("GET " + path + " Request Completed in " + latency + "ms");
+
+        return new ServerResponse(initTime/1000000,finalTime/1000000,res.getStatusCode().toString(), res.getBody(), latency);
     }
 
-    public void getSeasonsRequest(){
+    public ServerResponse getSeasonsRequest(){
         String path = "/resorts/" + (random.nextInt(4)+1) + "/seasons";
         double initTime = System.nanoTime();
-        String res = requestsHTTP.getRequest(path).getBody();
+        ResponseEntity<String> res = requestsHTTP.getRequest(path);
         double finalTime = System.nanoTime();
-        double time = finalTime - initTime;
-        logger.info(res);
-        logger.info("GET " + path + " Request Completed in " + time/1000000 + "ms");
+        double latency = (finalTime - initTime)/1000000;
+        //ogger.info(res);
+        //logger.info("GET " + path + " Request Completed in " + latency + "ms");
+
+        return new ServerResponse(initTime/1000000,finalTime/1000000,res.getStatusCode().toString(), res.getBody(), latency);
     }
 
-    public void addSeasonRequest(){
+    public ServerResponse addSeasonRequest(){
         String path = "/resorts/" + (random.nextInt(4)+1) + "/seasons";
         int season = random.nextInt(2030-2025+1)+2025;
 
@@ -45,11 +51,16 @@ public class ResortManagerClient {
         String body = gson.toJson(data);
 
         double initTime = System.nanoTime();
-        String res = requestsHTTP.postRequest(body,path).getBody();
+        ResponseEntity<String> res = requestsHTTP.postRequest(body,path);
         double finalTime = System.nanoTime();
-        double time = finalTime - initTime;
-        logger.info(res);
-        logger.info("POST " + path + " Request Completed in " + time/1000000 + "ms");
+        double latency = (finalTime - initTime)/1000000;
+        System.out.println(res.getStatusCode());
+        System.out.println(res.getBody());
+        System.out.println(res.getHeaders());
+        //logger.info(res.getBody());
+        //logger.info("POST " + path + " Request Completed in " + latency + "ms");
+
+        return new ServerResponse(initTime/1000000,finalTime/1000000,res.getStatusCode().toString(), res.getBody(), latency);
     }
 
 }

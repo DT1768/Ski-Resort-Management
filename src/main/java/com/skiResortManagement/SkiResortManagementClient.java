@@ -2,20 +2,18 @@ package com.skiResortManagement;
 
 import com.skiResortManagement.client.ResortManagerClient;
 import com.skiResortManagement.client.SkiManagerClient;
-
-import java.util.Random;
+import com.skiResortManagement.model.ServerResponse;
+import org.apache.catalina.Server;
 
 public class SkiResortManagementClient {
     public static void main(String[] args) {
-
-        Random random = new Random();
 
         SkiManagerClient skiManagerClient = new SkiManagerClient();
         ResortManagerClient resortManagerClient = new ResortManagerClient();
 
         resortManagerClient.getSeasonsRequest();
 
-        skiManagerClient.rideEventRequest();
+        ServerResponse res = skiManagerClient.rideEventRequest();
         resortManagerClient.getResortsRequest();
         resortManagerClient.getSeasonsRequest();
         resortManagerClient.addSeasonRequest();
