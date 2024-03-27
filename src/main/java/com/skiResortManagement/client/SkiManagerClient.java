@@ -3,6 +3,7 @@ package com.skiResortManagement.client;
 
 import com.google.gson.Gson;
 import com.skiResortManagement.model.ServerResponse;
+import com.skiResortManagement.util.RandomGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,10 @@ public class SkiManagerClient {
     Gson gson = new Gson();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private int errorProbability = 15;
+
     public ServerResponse rideEventRequest() {
-        String path = "/resorts/"+ (random.nextInt(10)+1) + "/seasons/" + 2022 + "/days/" + 1 + "/skiers/" + (random.nextInt(100000)+1);
+        String path = "/resorts/"+ RandomGenerator.randomNumber(0,10,errorProbability) + "/seasons/" + 2022 + "/days/" + 1 + "/skiers/" + (random.nextInt(100000)+1);
         int time = random.nextInt(360)+1;
         int liftId = random.nextInt(40)+1;
 

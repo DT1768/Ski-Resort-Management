@@ -41,6 +41,8 @@ public class MultithreadedClient {
         double p99_1 = Stats.calculate99thPercentile(latencies1);
         double min1 = Stats.findMin(latencies1);
         double max1 = Stats.findMax(latencies1);
+        long totalInjectedErrors1 = responses1.stream().filter(str -> str.startsWith("M")).count();
+        double ErrorInjectionPercentage1 = 100*((double)totalInjectedErrors1/totalRequests1);
 
         double initTime2 = System.nanoTime();
         requests10k.requests10k();
@@ -66,12 +68,16 @@ public class MultithreadedClient {
         double p99_2 = Stats.calculate99thPercentile(latencies2);
         double min2 = Stats.findMin(latencies2);
         double max2 = Stats.findMax(latencies2);
+        long totalInjectedErrors2 = responses2.stream().filter(str -> str.startsWith("M")).count();
+        double ErrorInjectionPercentage2 = 100*((double)totalInjectedErrors2/totalRequests2);
 
         double totalTime = time1 + time2;
         int totalRequests = totalRequests1 + totalRequests2;
         int unsucessfulRequests = unsuccessfulRequests1 + unsuccessfulRequests2;
         List<Double> total = new ArrayList<>(latencies1);
         total.addAll(latencies2);
+        long totalInjectedErrors = totalInjectedErrors1 + totalInjectedErrors2;
+        double ErrorInjectionPercentage = 100*((double)totalInjectedErrors/totalRequests);
 
 
         double sumTotal = Stats.calculateTotal(total)/1000.0;
@@ -87,7 +93,7 @@ public class MultithreadedClient {
 
         System.out.println("-------------STATS------------");
         System.out.println("------------PHASE-1-----------");
-        System.out.println(" Total time taken for 32k Requests: " + time1 + " s");
+        System.out.println("Total time taken for 32k Requests: " + time1 + " s");
         System.out.println("Total Requests: "+totalRequests1);
         System.out.println("Total Unsuccessful Requests: "+unsuccessfulRequests1);
         System.out.println("Mean: "+ mean1 + " ms");
@@ -96,11 +102,12 @@ public class MultithreadedClient {
         System.out.println("p99: "+ p99_1 + " ms");
         System.out.println("Fastest Response: "+ min1 + " ms");
         System.out.println("Slowest Response: "+ max1 + " ms");
-        System.out.println("Projected Time without Multithreading:" + sum1 + " s");
-
+        System.out.println("Projected Time without Multithreading: " + sum1 + " s");
+        System.out.println("Total injected Errors: " + totalInjectedErrors1);
+        System.out.println("Injected Error Percentage: " + ErrorInjectionPercentage1 + " %");
 
         System.out.println("------------PHASE-2-----------");
-        System.out.println(" Total time taken for 10k Requests: " + time2 + " s");
+        System.out.println("Total time taken for 10k Requests: " + time2 + " s");
         System.out.println("Total Requests: "+totalRequests2);
         System.out.println("Total Unsuccessful Requests: "+unsuccessfulRequests2);
         System.out.println("Mean: "+ mean2 + " ms");
@@ -109,11 +116,12 @@ public class MultithreadedClient {
         System.out.println("p99: "+ p99_2 + " ms");
         System.out.println("Fastest Response: "+ min2 + " ms");
         System.out.println("Slowest Response: "+ max2 + " ms");
-        System.out.println("Projected Time without Multithreading:" + sum2 + " s");
-
+        System.out.println("Projected Time without Multithreading: " + sum2 + " s");
+        System.out.println("Total injected Errors: " + totalInjectedErrors2);
+        System.out.println("Injected Error Percentage: " + ErrorInjectionPercentage2 + " %");
 
         System.out.println("-------------TOTAL------------");
-        System.out.println(" Total wall time: " + totalTime + " s");
+        System.out.println("Total wall time: " + totalTime + " s");
         System.out.println("Total Requests: "+totalRequests);
         System.out.println("Total Unsuccessful Requests: "+unsucessfulRequests);
         System.out.println("Mean: "+ meanTotal);
@@ -122,7 +130,9 @@ public class MultithreadedClient {
         System.out.println("p99: "+ p99_Total + " ms");
         System.out.println("Fastest Response: "+ minTotal + " ms");
         System.out.println("Slowest Response: "+ maxTotal + " ms");
-        System.out.println("Projected Time without Multithreading:" + sumTotal + " s");
+        System.out.println("Projected Time without Multithreading: " + sumTotal + " s");
+        System.out.println("Total injected Errors: " + totalInjectedErrors);
+        System.out.println("Injected Error Percentage: " + ErrorInjectionPercentage + " %");
 
 
 

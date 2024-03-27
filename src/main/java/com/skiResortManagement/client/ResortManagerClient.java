@@ -54,9 +54,9 @@ public class ResortManagerClient {
         ResponseEntity<String> res = requestsHTTP.postRequest(body,path);
         double finalTime = System.nanoTime();
         double latency = (finalTime - initTime)/1000000;
-        System.out.println(res.getStatusCode());
-        System.out.println(res.getBody());
-        System.out.println(res.getHeaders());
+        //System.out.println(res.getStatusCode());
+        //System.out.println(res.getBody());
+        //System.out.println(res.getHeaders());
         //logger.info(res.getBody());
         //logger.info("POST " + path + " Request Completed in " + latency + "ms");
 

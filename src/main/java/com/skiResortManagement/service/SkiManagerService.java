@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 @Service
 public class SkiManagerService {
     private final int maxAttempt = 5;
+    private int attemptCounter = 0;
 
     ArrayList<SkiManager> rideList = new ArrayList<SkiManager>();
 
@@ -24,26 +26,28 @@ public class SkiManagerService {
     }
 
     Gson gson = new Gson();
-    @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
+    //@Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))
     public String createRideEvent(SkiManager newSkiManager){
-        String response = "";
-        boolean validRequest = requestValidator(newSkiManager);
-        if(!validRequest){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Data");
+        for(int attempt=0; attempt<=maxAttempt;attempt++){
+            String response = "";
+            boolean validRequest = requestValidator(newSkiManager);
+            if (validRequest) {
+                java.util.Map<String, Object> data = new java.util.HashMap<>();
+                data.put("SkierId", newSkiManager.getSkierId());
+                data.put("ResortId", newSkiManager.getResortId());
+                data.put("LiftId", newSkiManager.getLiftId());
+                data.put("seasonId", newSkiManager.getSeasonId());
+                data.put("dayId", newSkiManager.getDayId());
+                data.put("time", newSkiManager.getTime());
+                String out = gson.toJson(data);
+                response = "Request Fetched Successfully." + "Details:" + out;
+                rideList.add(newSkiManager);
+                return response;
+            } else {
+                System.out.println("Attempting Retry");
+            }
         }
-        else{
-            java.util.Map<String, Object> data = new java.util.HashMap<>();
-            data.put("SkierId",newSkiManager.getSkierId());
-            data.put("ResortId",newSkiManager.getResortId());
-            data.put("LiftId",newSkiManager.getLiftId());
-            data.put("seasonId", newSkiManager.getSeasonId());
-            data.put("dayId",newSkiManager.getDayId());
-            data.put("time",newSkiManager.getTime());
-            String out = gson.toJson(data);
-            response = "Request Fetched Successfully." +"Details:" + out;
-            rideList.add(newSkiManager);
-        }
-        return response;
+        return "Max Retries Reached, Still Sending 200";
     }
 
     @Retryable(retryFor = ResponseStatusException.class, maxAttempts = maxAttempt, backoff = @Backoff(delay = 1000))

@@ -56,6 +56,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
+                <configuration>
+                    <mainClass>com.skiResortManagement.SkiResortManagementApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
